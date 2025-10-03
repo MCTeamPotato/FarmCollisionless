@@ -1,5 +1,6 @@
 package me.kall.farmcollisionless;
 
+import me.kall.farmcollisionless.cmd.CollisionlessCommand;
 import me.kall.farmcollisionless.data.CollisionlessData;
 import me.kall.jsonate.api.JsonConfig;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.common.Mod;
@@ -35,6 +37,7 @@ public final class FarmCollisionless {
     public FarmCollisionless() {
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::placeProvider);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::removeProvider);
+        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> CollisionlessCommand.register(event.getDispatcher()));
     }
 
     public void placeProvider(BlockEvent.@NotNull EntityPlaceEvent event) {
