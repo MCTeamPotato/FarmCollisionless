@@ -9,11 +9,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 @Mod(FarmCollisionless.MOD_ID)
@@ -35,9 +35,9 @@ public final class FarmCollisionless {
     }
 
     public FarmCollisionless() {
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::placeProvider);
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::removeProvider);
-        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> CollisionlessCommand.register(event.getDispatcher()));
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::placeProvider);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::removeProvider);
+        NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> CollisionlessCommand.register(event.getDispatcher()));
     }
 
     public void placeProvider(BlockEvent.@NotNull EntityPlaceEvent event) {

@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.longs.LongSets;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.LongTag;
@@ -21,7 +22,7 @@ public class CollisionlessData extends SavedData {
     private final Map<ResourceLocation, LongSet> collisionlessChunks = new Object2ObjectOpenHashMap<>();
 
     public static @NotNull CollisionlessData get(@NotNull ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(CollisionlessData::load, CollisionlessData::new, NAME);
+        return level.getDataStorage().computeIfAbsent(new Factory<>(CollisionlessData::new, (tag, provider) -> load(tag)), NAME);
     }
 
     public static @NotNull CollisionlessData load(@NotNull CompoundTag tag) {
@@ -43,7 +44,7 @@ public class CollisionlessData extends SavedData {
     }
 
     @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         for (Map.Entry<ResourceLocation, LongSet> entry : collisionlessChunks.entrySet()) {
             ListTag list = new ListTag();
             for (long chunk : entry.getValue()) {
