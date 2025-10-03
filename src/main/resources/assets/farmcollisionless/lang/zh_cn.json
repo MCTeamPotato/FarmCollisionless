@@ -1,0 +1,4 @@
+{
+  "info.farmcollisionless": "[FarmCollisionless] 此区块的实体碰撞行为已被禁止。",
+  "info.farmcollisionless.cancel": "[FarmCollisionless] 此区块的实体碰撞行为已被重新允许。"
+}

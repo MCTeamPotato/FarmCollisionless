@@ -1,0 +1,13 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+#issueTrackerURL = ""
+license = "MIT"
+
+[[mods]]
+modId = "farmcollisionless"
+version = "${version}"
+displayName = "FarmCollisionless"
+authors = "Kall"
+description = '''
+'''
+#logoFile = ""

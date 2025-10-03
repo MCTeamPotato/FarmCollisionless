@@ -1,0 +1,4 @@
+{
+  "info.farmcollisionless": "[FarmCollisionless] Entities in this chunk will no longer push each other.",
+  "info.farmcollisionless.cancel": "[FarmCollisionless] Entities in this chunk will push each other."
+}
