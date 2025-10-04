@@ -1,2 +1,2 @@
-# 1.1.0
-New config options & commands & detection.
+# 1.1.1
+New config option: RequireOPForCollisionlessChunkActivation
