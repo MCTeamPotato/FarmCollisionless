@@ -11,7 +11,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -62,7 +65,7 @@ public final class FarmCollisionless {
         INTERVAL = CONFIG.getInt("DetectionIntervalTicks");
     }
 
-    public FarmCollisionless() {
+    public FarmCollisionless(IEventBus modBus, Dist dist, ModContainer container) {
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::placeProvider);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::removeProvider);
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> CollisionlessCommand.register(event.getDispatcher()));

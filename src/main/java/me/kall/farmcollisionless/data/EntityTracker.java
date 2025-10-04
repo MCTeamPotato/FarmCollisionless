@@ -6,18 +6,18 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.kall.farmcollisionless.FarmCollisionless;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.level.ChunkEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.level.ChunkEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -26,12 +26,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = FarmCollisionless.MOD_ID)
+@EventBusSubscriber(modid = FarmCollisionless.MOD_ID)
 public class EntityTracker {
     private static final Map<ResourceLocation, Long2ObjectMap<Map<ResourceLocation, Set<UUID>>>> ENTITIES = new Object2ObjectOpenHashMap<>();
 
     public static ResourceLocation type(@NotNull Entity entity) {
-        return ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
     }
 
     public static @NotNull @UnmodifiableView Set<UUID> getEntities(@NotNull ServerLevel level, long chunkPos, ResourceLocation entityType) {
