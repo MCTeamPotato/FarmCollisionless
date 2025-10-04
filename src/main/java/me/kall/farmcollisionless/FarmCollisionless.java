@@ -34,19 +34,21 @@ public final class FarmCollisionless {
     public static Set<ResourceLocation> WHITELIST;
     public static boolean USE_WHITELIST;
     public static int INTERVAL;
+    public static boolean OP;
 
     static {
         initConfig();
     }
 
     public static void initConfig() {
-        CONFIG = JsonConfig.create(MOD_ID, "2")
+        CONFIG = JsonConfig.create(MOD_ID, "3")
                 .put("CollisionlessProvider", "net.minecraft.world.level.block.FenceBlock")
                 .put("AutoDetectFarm", true)
                 .put("SkipEnemyMonsterFarm", true)
                 .put("TheNumberOfEntitiesInAChunkThatValidatesDetection", 10)
                 .put("DetectionIntervalTicks", 20)
                 .put("FarmEntitiesRegistryNameWhitelist", Lists.newArrayList())
+                .put("RequireOPForCollisionlessChunkActivation", true)
                 .initialize();
         try {
             PROVIDER = Class.forName(CONFIG.getString("CollisionlessProvider"));
@@ -60,6 +62,7 @@ public final class FarmCollisionless {
         WHITELIST = CONFIG.getStream("FarmEntitiesRegistryNameWhitelist", String.class).map(ResourceLocation::parse).collect(Collectors.toSet());
         USE_WHITELIST = !WHITELIST.isEmpty();
         INTERVAL = CONFIG.getInt("DetectionIntervalTicks");
+        OP = CONFIG.getBoolean("RequireOPForCollisionlessChunkActivation");
     }
 
     public FarmCollisionless() {
@@ -71,6 +74,7 @@ public final class FarmCollisionless {
     public void placeProvider(BlockEvent.@NotNull EntityPlaceEvent event) {
         if (event.isCanceled()) return;
         if (event.getEntity() instanceof ServerPlayer player && player.level() instanceof ServerLevel serverLevel && player.isCrouching() && PROVIDER.isInstance(event.getPlacedBlock().getBlock())) {
+            if (OP && !player.hasPermissions(2)) return;
             CollisionlessData.get(serverLevel).add(serverLevel.dimension().location(), ChunkPos.asLong(event.getPos()));
             player.displayClientMessage(Component.translatable("info." + MOD_ID), false);
         }
@@ -81,6 +85,7 @@ public final class FarmCollisionless {
         Player player = event.getPlayer();
         Level level = player.level();
         if (PROVIDER.isInstance(event.getState().getBlock()) && level instanceof ServerLevel serverLevel && player.isCrouching()) {
+            if (OP && !player.hasPermissions(2)) return;
             CollisionlessData.get(serverLevel).remove(serverLevel.dimension().location(), ChunkPos.asLong(event.getPos()));
             player.displayClientMessage(Component.translatable("info." + MOD_ID + ".cancel"), false);
         }
