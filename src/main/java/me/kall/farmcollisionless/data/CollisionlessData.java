@@ -30,7 +30,7 @@ public class CollisionlessData extends SavedData {
 
         for (String dimKey : tag.getAllKeys()) {
             ResourceLocation dim = ResourceLocation.parse(dimKey);
-            ListTag chunksTag = tag.getList(dimKey, CompoundTag.TAG_LONG);
+            ListTag chunksTag = tag.getList(dimKey, Tag.TAG_LONG);
             LongSet chunks = new LongOpenHashSet();
             for (Tag value : chunksTag) {
                 if (value instanceof LongTag) {
@@ -59,6 +59,10 @@ public class CollisionlessData extends SavedData {
         return collisionlessChunks.getOrDefault(dim, LongSets.emptySet()).contains(chunkPos);
     }
 
+    public LongSet getChunks(ResourceLocation dim) {
+        return collisionlessChunks.getOrDefault(dim, LongSets.emptySet());
+    }
+
     public void add(ResourceLocation dim, long chunkPos) {
         collisionlessChunks.computeIfAbsent(dim, k -> new LongOpenHashSet()).add(chunkPos);
         setDirty();
@@ -71,5 +75,10 @@ public class CollisionlessData extends SavedData {
             if (set.isEmpty()) collisionlessChunks.remove(dim);
             setDirty();
         }
+    }
+
+    public void clear(ResourceLocation dim) {
+        collisionlessChunks.remove(dim);
+        setDirty();
     }
 }

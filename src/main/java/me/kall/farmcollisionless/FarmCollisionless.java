@@ -1,9 +1,11 @@
 package me.kall.farmcollisionless;
 
+import com.google.common.collect.Lists;
 import me.kall.farmcollisionless.cmd.CollisionlessCommand;
 import me.kall.farmcollisionless.data.CollisionlessData;
 import me.kall.jsonate.api.JsonConfig;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -16,22 +18,48 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Mod(FarmCollisionless.MOD_ID)
 public final class FarmCollisionless {
     public static final String MOD_ID = "farmcollisionless";
 
-    public static final JsonConfig CONFIG = JsonConfig.create(MOD_ID, "1.0.0")
-            .put("CollisionlessProvider", "net.minecraft.world.level.block.FenceBlock")
-            .initialize();
+    public static JsonConfig CONFIG;
 
-    public static final Class<?> PROVIDER;
+    public static Class<?> PROVIDER;
+    public static boolean AUTO;
+    public static int GAP;
+    public static boolean SKIP_ENEMY;
+    public static Set<ResourceLocation> WHITELIST;
+    public static boolean USE_WHITELIST;
+    public static int INTERVAL;
 
     static {
+        initConfig();
+    }
+
+    public static void initConfig() {
+        CONFIG = JsonConfig.create(MOD_ID, "2")
+                .put("CollisionlessProvider", "net.minecraft.world.level.block.FenceBlock")
+                .put("AutoDetectFarm", true)
+                .put("SkipEnemyMonsterFarm", true)
+                .put("TheNumberOfEntitiesInAChunkThatValidatesDetection", 10)
+                .put("DetectionIntervalTicks", 20)
+                .put("FarmEntitiesRegistryNameWhitelist", Lists.newArrayList())
+                .initialize();
         try {
             PROVIDER = Class.forName(CONFIG.getString("CollisionlessProvider"));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+
+        AUTO = CONFIG.getBoolean("AutoDetectFarm");
+        GAP = CONFIG.getInt("TheNumberOfEntitiesInAChunkThatValidatesDetection");
+        SKIP_ENEMY = CONFIG.getBoolean("SkipEnemyMonsterFarm");
+        WHITELIST = CONFIG.getStream("FarmEntitiesRegistryNameWhitelist", String.class).map(ResourceLocation::parse).collect(Collectors.toSet());
+        USE_WHITELIST = !WHITELIST.isEmpty();
+        INTERVAL = CONFIG.getInt("DetectionIntervalTicks");
     }
 
     public FarmCollisionless() {
