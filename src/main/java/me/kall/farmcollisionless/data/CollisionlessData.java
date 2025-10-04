@@ -29,7 +29,7 @@ public class CollisionlessData extends SavedData {
 
         for (String dimKey : tag.getAllKeys()) {
             ResourceLocation dim = ResourceLocation.parse(dimKey);
-            ListTag chunksTag = tag.getList(dimKey, CompoundTag.TAG_LONG);
+            ListTag chunksTag = tag.getList(dimKey, Tag.TAG_LONG);
             LongSet chunks = new LongOpenHashSet();
             for (Tag value : chunksTag) {
                 if (value instanceof LongTag) {
