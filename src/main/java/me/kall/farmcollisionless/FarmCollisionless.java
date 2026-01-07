@@ -19,6 +19,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Mod(FarmCollisionless.MOD_ID)
@@ -89,5 +91,11 @@ public final class FarmCollisionless {
             CollisionlessData.get(serverLevel).remove(serverLevel.dimension().location(), ChunkPos.asLong(event.getPos()));
             player.displayClientMessage(Component.translatable("info." + MOD_ID + ".cancel"), false);
         }
+    }
+
+    public static @NotNull UUID randomUUID() {
+        long l = ThreadLocalRandom.current().nextLong() & -61441L | 16384L;
+        long m = ThreadLocalRandom.current().nextLong() & 4611686018427387903L | Long.MIN_VALUE;
+        return new UUID(l, m);
     }
 }
