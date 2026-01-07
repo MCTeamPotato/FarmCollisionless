@@ -1,10 +1,10 @@
 package me.kall.farmcollisionless.mixin;
 
+import me.kall.farmcollisionless.FarmCollisionless;
 import me.kall.farmcollisionless.data.CollisionlessData;
 import me.kall.farmcollisionless.data.EntityTracker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.Level;
@@ -47,8 +47,8 @@ public abstract class EntityMixin {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V"), require = 0)
     private void init(@NotNull Entity instance, double x, double y, double z) {
         if (this.level instanceof ServerLevel serverLevel) {
-            UUID id = Mth.createInsecureUUID(this.level.getRandom());
-            while (serverLevel.getEntity(id) != null) id = Mth.createInsecureUUID(this.level.getRandom());
+            UUID id = FarmCollisionless.randomUUID();
+            while (serverLevel.getEntity(id) != null) id = FarmCollisionless.randomUUID();
             this.setUUID(id);
         }
         instance.setPos(x, y, z);
